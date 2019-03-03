@@ -1,0 +1,10 @@
+= Spring REST Docs WebTestClient Sample
+Kamil Kiewisz;
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+
+Sample application demonstrating how to use Spring REST Docs with Spring Framework's
+WebTestClient.
+
+operation::home[snippets='request-headers,curl-request,http-request,http-response,dsl-contract']

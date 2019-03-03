@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.info.BuildProperties;
 import org.springframework.boot.info.GitProperties;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,7 +26,7 @@ public class HomeController {
         this.gitProperties = gitProperties;
     }
 
-    @GetMapping({"/", "/hello"})
+    @GetMapping(value = {"/", "/hello"}, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity hello() {
         return ResponseEntity.ok(Map.of("buildProperties", buildProperties, "gitProperties", gitProperties));
     }
