@@ -1,0 +1,57 @@
+plugins {
+    id 'java'
+    id 'org.asciidoctor.convert' version '1.5.3'
+    id 'org.springframework.boot' version '2.1.3.RELEASE'
+    id "com.gorylenko.gradle-git-properties" version "2.0.0"
+}
+
+apply plugin: 'io.spring.dependency-management'
+
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+def snippetsDir = "build/generated-snippets"
+
+dependencies {
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    compileOnly 'org.projectlombok:lombok'
+    runtimeOnly 'org.springframework.boot:spring-boot-devtools'
+
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+    implementation 'org.springframework.retry:spring-retry'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'io.projectreactor:reactor-test'
+    testImplementation 'org.springframework.restdocs:spring-restdocs-webtestclient'
+    testImplementation 'org.springframework.security:spring-security-test'
+}
+
+springBoot {
+    buildInfo()
+}
+
+
+test {
+    outputs.dir snippetsDir
+}
+
+asciidoctor {
+    inputs.dir snippetsDir
+    dependsOn test
+}
