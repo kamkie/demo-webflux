@@ -1,5 +1,6 @@
 package com.example.demo.config;
 
+import org.springframework.boot.actuate.autoconfigure.security.reactive.EndpointRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
@@ -22,7 +23,8 @@ public class SecurityConfig {
     @Bean
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
         return http.authorizeExchange()
-                .pathMatchers("/", "/home", "/favicon.ico").permitAll()
+                .pathMatchers("/", "/home", "/favicon.ico", "/docs/**").permitAll()
+                .matchers(EndpointRequest.to("info", "health")).permitAll()
                 .anyExchange().authenticated()
                 .and().httpBasic()
                 .and().build();
