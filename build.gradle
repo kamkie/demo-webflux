@@ -51,7 +51,7 @@ dependencies {
     // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter', version: '5.7.0'
     // https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-contract-wiremock
-    testImplementation group: 'org.springframework.cloud', name: 'spring-cloud-contract-wiremock', version: '3.0.0'
+    testImplementation group: 'org.springframework.cloud', name: 'spring-cloud-contract-wiremock', version: '3.0.1'
 }
 
 springBoot {
