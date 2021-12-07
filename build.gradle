@@ -1,33 +1,38 @@
 plugins {
     id 'java'
     id "com.palantir.git-version" version "0.12.3"
-    id 'org.asciidoctor.convert' version '2.4.0'
-    id 'org.springframework.boot' version '2.6.1'
+    id "org.asciidoctor.jvm.convert" version "3.3.2"
+    id 'org.springframework.boot' version "${springBootVersion}"
     id "com.gorylenko.gradle-git-properties" version "2.3.2"
     id 'com.adarshr.test-logger' version '3.1.0'
     id "com.ofg.uptodate" version "1.6.3"
     id "com.github.ben-manes.versions" version "0.39.0"
 }
 
-apply plugin: 'io.spring.dependency-management'
-
 group = 'com.example'
 version = gitVersion()
-sourceCompatibility = '11'
-
-configurations {
-    compileOnly {
-        extendsFrom annotationProcessor
-    }
-}
+def javaVersion = JavaVersion.VERSION_17
+sourceCompatibility = javaVersion
+targetCompatibility = javaVersion
 
 repositories {
     mavenCentral()
 }
 
-def snippetsDir = "build/generated-snippets"
+ext["snippetsDir"] = "build/generated-snippets"
+configurations {
+    create("asciidoctor")
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
 
 dependencies {
+    implementation(platform("org.springframework.boot:spring-boot-dependencies:$springBootVersion"))
+    annotationProcessor(platform("org.springframework.boot:spring-boot-dependencies:$springBootVersion"))
+    testAnnotationProcessor(platform("org.springframework.boot:spring-boot-dependencies:$springBootVersion"))
+    asciidoctor(platform("org.springframework.boot:spring-boot-dependencies:$springBootVersion"))
+
     annotationProcessor 'org.projectlombok:lombok'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 
@@ -42,14 +47,10 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
     implementation 'org.springframework.retry:spring-retry'
 
-    testImplementation('org.springframework.boot:spring-boot-starter-test') {
-        exclude group: "junit", module: "junit"
-    }
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'io.projectreactor:reactor-test'
     testImplementation 'org.springframework.restdocs:spring-restdocs-webtestclient'
     testImplementation 'org.springframework.security:spring-security-test'
-    // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter
-    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter', version: '5.8.2'
     // https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-contract-wiremock
     testImplementation group: 'org.springframework.cloud', name: 'spring-cloud-contract-wiremock', version: '3.1.0'
 }
@@ -62,6 +63,10 @@ bootRun {
     systemProperty "spring.output.ansi.enabled", "always"
 }
 
+bootJar {
+    classifier("boot")
+}
+
 test {
     useJUnitPlatform()
     outputs.dir snippetsDir
@@ -70,9 +75,18 @@ test {
 asciidoctor {
     inputs.dir snippetsDir
     outputs.dir("build/resources/main")
+    forkOptions {
+        jvmArgs '--add-opens', 'java.base/sun.nio.ch=ALL-UNNAMED',
+                '--add-opens', 'java.base/java.io=ALL-UNNAMED'
+    }
+    attributes(
+            springbootversion: "$springBootVersion",
+            projectdir: "$projectDir",
+            snippets: snippetsDir
+    )
     doLast {
         copy {
-            from "build/asciidoc/html5"
+            from "build/docs/asciidoc"
             into "build/resources/main/static/docs"
             include "index.html"
         }
@@ -81,7 +95,7 @@ asciidoctor {
 }
 
 //noinspection UnnecessaryQualifiedReference
-task asciidoctorFast(type: org.asciidoctor.gradle.AsciidoctorTask) {
+task asciidoctorFast(type: org.asciidoctor.gradle.jvm.AsciidoctorTask) {
     inputs.dir snippetsDir
     dependsOn = []
     outputs.dir("build/resources/main")
@@ -94,9 +108,11 @@ task asciidoctorFast(type: org.asciidoctor.gradle.AsciidoctorTask) {
     }
 }
 
+asciidoctor.mustRunAfter bootJarMainClassName
+jar.mustRunAfter asciidoctor
 bootJar.dependsOn asciidoctor
 
 wrapper {
-    gradleVersion = "5.4.1"
+    gradleVersion = "7.3.1"
     distributionType = Wrapper.DistributionType.ALL
 }

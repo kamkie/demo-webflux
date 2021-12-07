@@ -26,7 +26,7 @@ public class HomeController {
         this.gitProperties = gitProperties;
     }
 
-    @GetMapping(value = {"/", "/hello"}, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @GetMapping(value = {"/", "/hello"}, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity hello() {
         return ResponseEntity.ok(Map.of("buildProperties", buildProperties, "gitProperties", gitProperties));
     }

@@ -7,4 +7,27 @@ Kamil Kiewisz;
 Sample application demonstrating how to use Spring REST Docs with Spring Framework's
 WebTestClient.
 
-operation::home[snippets='request-headers,curl-request,http-request,http-response,dsl-contract']
+`DemoApplicationTest` makes a call to a very simple service. Six
+snippets are produced. One showing how to make a request using cURL:
+
+include::{snippets}/home/curl-request.adoc[]
+
+One showing how to make a request using HTTPie:
+
+include::{snippets}/home/httpie-request.adoc[]
+
+One showing the HTTP request:
+
+include::{snippets}/home/http-request.adoc[]
+
+One showing the request body:
+
+include::{snippets}/home/request-body.adoc[]
+
+One showing the HTTP response:
+
+include::{snippets}/home/http-response.adoc[]
+
+And one showing the response body:
+
+include::{snippets}/home/response-body.adoc[]
