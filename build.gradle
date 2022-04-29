@@ -52,7 +52,7 @@ dependencies {
     testImplementation 'org.springframework.restdocs:spring-restdocs-webtestclient'
     testImplementation 'org.springframework.security:spring-security-test'
     // https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-contract-wiremock
-    testImplementation group: 'org.springframework.cloud', name: 'spring-cloud-contract-wiremock', version: '3.1.1'
+    testImplementation group: 'org.springframework.cloud', name: 'spring-cloud-contract-wiremock', version: '3.1.2'
 }
 
 springBoot {
