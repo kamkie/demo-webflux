@@ -1,7 +1,7 @@
 plugins {
     id 'java'
     id "com.palantir.git-version" version "3.1.0"
-    id "org.asciidoctor.jvm.convert" version "4.0.2"
+    id "org.asciidoctor.jvm.convert" version "4.0.3"
     id 'org.springframework.boot' version "${springBootVersion}"
     id "com.gorylenko.gradle-git-properties" version "2.4.2"
     id 'com.adarshr.test-logger' version '4.0.0'
