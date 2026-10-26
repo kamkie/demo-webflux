@@ -5,15 +5,16 @@ plugins {
     id 'org.springframework.boot' version "${springBootVersion}"
     id "com.gorylenko.gradle-git-properties" version "4.0.1"
     id 'com.adarshr.test-logger' version '4.0.0'
-    id "com.ofg.uptodate" version "1.6.3"
     id "com.github.ben-manes.versions" version "0.66.0"
 }
 
 group = 'com.example'
 version = gitVersion()
 def javaVersion = JavaVersion.VERSION_17
-sourceCompatibility = javaVersion
-targetCompatibility = javaVersion
+java {
+    sourceCompatibility = javaVersion
+    targetCompatibility = javaVersion
+}
 
 repositories {
     mavenCentral()
@@ -42,12 +43,13 @@ dependencies {
     runtimeOnly 'org.springframework.boot:spring-boot-devtools'
 
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
-    implementation 'org.springframework.boot:spring-boot-starter-aop'
+    implementation 'org.springframework.boot:spring-boot-starter-aspectj'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
-    implementation 'org.springframework.retry:spring-retry'
 
+    testImplementation 'org.springframework.boot:spring-boot-restdocs'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.boot:spring-boot-webtestclient'
     testImplementation 'io.projectreactor:reactor-test'
     testImplementation 'org.springframework.restdocs:spring-restdocs-webtestclient'
     testImplementation 'org.springframework.security:spring-security-test'
@@ -64,7 +66,7 @@ bootRun {
 }
 
 bootJar {
-    classifier("boot")
+    archiveClassifier.set("boot")
 }
 
 test {
@@ -108,11 +110,10 @@ task asciidoctorFast(type: org.asciidoctor.gradle.jvm.AsciidoctorTask) {
     }
 }
 
-asciidoctor.mustRunAfter bootJarMainClassName
+asciidoctor.mustRunAfter resolveMainClassName
 jar.mustRunAfter asciidoctor
 bootJar.dependsOn asciidoctor
 
 wrapper {
-    gradleVersion = "7.3.1"
     distributionType = Wrapper.DistributionType.ALL
 }
