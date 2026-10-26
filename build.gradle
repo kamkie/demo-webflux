@@ -43,21 +43,18 @@ dependencies {
     runtimeOnly 'org.springframework.boot:spring-boot-devtools'
 
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
-    implementation 'org.springframework.boot:spring-boot-starter-aop'
+    implementation 'org.springframework.boot:spring-boot-starter-aspectj'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
-    implementation 'org.springframework.retry:spring-retry'
 
+    testImplementation 'org.springframework.boot:spring-boot-restdocs'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.boot:spring-boot-webtestclient'
     testImplementation 'io.projectreactor:reactor-test'
     testImplementation 'org.springframework.restdocs:spring-restdocs-webtestclient'
     testImplementation 'org.springframework.security:spring-security-test'
     // https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-contract-wiremock
-    testImplementation(group: 'org.springframework.cloud', name: 'spring-cloud-contract-wiremock', version: '5.0.3') {
-        exclude group: 'org.springframework.boot'
-        exclude group: 'org.springframework'
-        exclude group: 'org.springframework.restdocs'
-    }
+    testImplementation group: 'org.springframework.cloud', name: 'spring-cloud-contract-wiremock', version: '5.0.3'
 }
 
 springBoot {
